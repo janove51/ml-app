@@ -20,7 +20,7 @@ def assemble_param_grid_rf(nr_trees_min=200, nr_trees_max=2000, nr_trees_options
     :param bootstrap_options: 
     :param min_samples_split: 
     :param min_samples_leaf:     
-    :return: 
+    :return: grid for optimizing random forest model
     '''
 
     # Number of trees = size of the ensemble itself

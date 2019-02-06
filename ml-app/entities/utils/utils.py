@@ -13,6 +13,7 @@ def timeit(method):
         return result
     return timed
 
+
 def get_file_size(file_obj):
     size = None
     try:
@@ -23,6 +24,7 @@ def get_file_size(file_obj):
         file_obj.seek(0, os.SEEK_END)
         size = file_obj.tell()
     return size
+
 
 def get_inMemory_obj_size(obj):
     ''' Returns object size in MB'''
