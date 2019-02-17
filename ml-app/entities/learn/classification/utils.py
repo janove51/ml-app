@@ -2,7 +2,6 @@ from sklearn import metrics
 from sklearn.model_selection import StratifiedShuffleSplit
 
 
-
 def train_test_split(X=None, y=None, random_state=None,
                      split_method='StratifiedShuffleSplit', n_splits=2, test_size=0.3):
     '''
@@ -30,6 +29,26 @@ def train_test_split(X=None, y=None, random_state=None,
     return X_train, X_test, y_train, y_test
 
 
+def evaluate_classifier(model, X_test, y_test, metric):
+    '''
+    Multiple metrics can be specified. Get stored in dictionary.
+    :param model: scikit object
+    :param X_test: nd-array
+    :param y_test: nd-array
+    :param metric: float
+    :return: dictionary, every key = metric and its value (indicating whether its % or not)
+    '''
+
+    metric_output = {}
+
+    # Assumes binary problem and 1 to be the target value!
+    if metric == 'brier_score':
+        predictions = model.predict_proba(X_test)[:,1]
+        metric_value = round(metrics.brier_score_loss(y_test, predictions), 3)
+
+    metric_output[metric] = metric_value
+
+    return metric_output
 
 
 def randomly_refit_model(df, features, dependent_variable, estimator, n_iterations=5, metric='recall'):
