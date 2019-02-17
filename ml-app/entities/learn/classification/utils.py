@@ -3,7 +3,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 
 
 
-def train_test_split(df, features, dependent_variable, random_state=None,
+def train_test_split(X=None, y=None, random_state=None,
                      split_method='StratifiedShuffleSplit', n_splits=2, test_size=0.3):
     '''
     Splits dataframe into train and test set for model evaluation
@@ -17,10 +17,6 @@ def train_test_split(df, features, dependent_variable, random_state=None,
     :return: nd-arrays of splits for train and test
     '''
 
-    # Split into train and test
-    X = df[features]
-    y = df[dependent_variable]
-
     if split_method == 'StratifiedShuffleSplit':
         sss = StratifiedShuffleSplit(n_splits=n_splits, test_size=test_size, random_state=random_state)
         sss.get_n_splits(X, y)
@@ -28,8 +24,8 @@ def train_test_split(df, features, dependent_variable, random_state=None,
         raise Exception('Invalid split method {}. Expecting: "StratifiedShuffleSplit"')
 
     for train_index, test_index in sss.split(X, y):
-        X_train, X_test = X.iloc[train_index], X.iloc[test_index]  # numpy has different index convention than pandas
-        y_train, y_test = y.iloc[train_index], y.iloc[test_index]
+        X_train, X_test = X[train_index], X[test_index]  # numpy has different index convention than pandas
+        y_train, y_test = y[train_index], y[test_index]
 
     return X_train, X_test, y_train, y_test
 

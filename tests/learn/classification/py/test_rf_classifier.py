@@ -13,9 +13,6 @@ CONSTANTS = {
 
 }
 
-# generate 2d classification dataset for testing
-X, y = make_blobs(n_samples=100, centers=3, n_features=2)
-
 
 # generate 2d classification dataset
 # X, y = make_circles(n_samples=100, noise=0.05)
