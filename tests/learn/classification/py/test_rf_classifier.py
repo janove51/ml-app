@@ -10,14 +10,12 @@ from entities.utils.utils import read_file
 
 CONSTANTS = {
     'train_rf': '../tasks/test_rf_classifier.json'
-
 }
 
+##### Job file test #####
 
-# generate 2d classification dataset
-# X, y = make_circles(n_samples=100, noise=0.05)
-
-# train the random forest
 filename = CONSTANTS['train_rf']
 task = Task(read_file(filename))
 task.run()
+
+##### RF Classifier test ####

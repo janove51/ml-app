@@ -8,6 +8,8 @@ from error_handler import handle_warnings
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+
+
 class Task(object):
     '''
     Tasks are defined by the definition_json, which specifies the use case to be executed
