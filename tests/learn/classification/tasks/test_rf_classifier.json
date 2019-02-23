@@ -1,9 +1,0 @@
-{
-  "base_path" : "../tasks",
-  "input" : "std_in",
-  "output" : {
-               "classification" : {
-                                    "model" : "random_forest"
-                                  }
-             }
-}

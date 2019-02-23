@@ -1,6 +1,6 @@
 import os, sys
-sys.path.append(os.path.abspath('../../../entities/learn'))
-print(os.path.abspath('../../../entities/learn'))
+sys.path.append(os.path.abspath('./entities/learn'))
+print(os.path.abspath('./entities/learn'))
 import classification.utils
 import classification.model
 import pickle
@@ -8,9 +8,6 @@ import datetime
 import time
 
 ######## RF classifier: ########
-from sklearn.datasets import make_classification
-
-X, y = make_classification(n_samples=1000, n_features=4, n_informative=2, n_redundant=0, random_state=0, shuffle=False)
 
 
 def train(X, y):
@@ -28,22 +25,23 @@ def train(X, y):
 
     model_accuracy = classification.utils.evaluate_classifier(model, X_test, y_test, metric='brier_score')
 
+    print('Model training done. Accuracy: ', model_accuracy)
+
     return model, model_accuracy
 
 
 
-def store(model, model_accuracy, file_path, model_name):
+def store(model, model_accuracy, output_path):
 
     current_time = time.time()
     current_timestamp = datetime.datetime.fromtimestamp(current_time).strftime('%Y-%m-%d %H:%M:%S')
 
-    output = {"model":model,
-              "accuracy":model_accuracy,
-              "created_date": current_timestamp}
+    output = {"model": model,
+              "accuracy": model_accuracy,
+              "created_datetime": current_timestamp}
 
-    with open("{}{}.pickle".format(file_path, model_name), "wb") as trained_model:
+    with open("{}.pickle".format(output_path), "wb") as pickle_out:
 
-            pickle.dump(trained_model)
+            pickle.dump(output, pickle_out, protocol = pickle.HIGHEST_PROTOCOL)
 
-
-
+    print(model, " stored under", output_path)

@@ -1,74 +1,64 @@
-import os
 import sys
+import json
+from pathlib import Path      # makes file paths OS agnostic
 from importlib import import_module
-from error_handler import handle_warnings
 
 
-# Setting default Encoding to UTF-8
-reload(sys)
-sys.setdefaultencoding('utf8')
+# Fetch config file from std. input: todo: use config parser
+def fetch_std_input(std_input):
+
+    if len(std_input) > 1:
+        config_file_path = std_input[1]
+    else:
+        raise Exception("File path to config file required")
+
+    return(config_file_path)
 
 
+def read_config(config_file_path):
 
-class Task(object):
-    '''
-    Tasks are defined by the definition_json, which specifies the use case to be executed
-    '''
+    config_file_path = Path(config_file_path)
 
-    def __init__(self, definition_json):
-        self.task_definition = definition_json
-        self._set_project_path()     # so that subsequent import statements find the modules such as utils
-        self._get_task_io()
-        # self.ml_app_folder = 'commons.etl_blackbox.modules.'    # where the ml-app is sitting
-        self.commons_module_data_io = '.data_io'
-        self._get_task_module()
+    with open(config_file_path) as f:
+        config = json.load(f)
 
-    def _set_param(self, param):
-        ''' Used for getting the value of specified parameter from the task definition '''
-        return self.task_definition[param]
+    # Task parameters
+    task_definition = config['task']
+    print("Task:", task_definition)
 
-    def _set_project_path(self):
-        ''' Base path from where the project module is called '''
+    # Input parameters
+    input_config = config['input']
+    input_path = Path(input_config['path'] + input_config['name'])
+    print("input_path:", input_path)
 
-        self.project_base_path = os.getcwd() + "/" + self.task_definition['base_path']
+    # Output parameters
+    output_config = config['output']
+    output_path = Path(output_config['path'] + output_config['name'])
+    print("output_path:", output_path)
 
-    def _get_task_io(self):
-        ''' Dynamically assemble the use case from input and output definition '''
-        self.task_input_name = self.task_definition['input'].keys()[0]
-        self.task_output_name = self.task_definition['output'].keys()[0]
-        self.task_input_definition = self.task_definition['input'][self.task_input_name]
-        self.task_output_definition = self.task_definition['output'][self.task_output_name]
+    return task_definition, input_path, output_path
 
-    def _get_module_file(self, module_name):
-        ''' Import file module
-        :param module_name: Module file name
-        :return: file object of module
-        '''
 
-        return import_module(module_name)
+def import_use_case(task_definition, module_parent = 'use_cases'):
 
-    def _get_module(self, module_file, module_name):
-        ''' Import module object
-        :param module_file: file name of module
-        :param module_name: class name of module
-        :return: class object of module
-        '''
+    main_module = list(task_definition.keys())[0]
+    sub_module =list(task_definition[main_module].keys())[0]
+    use_case_module = module_parent + '.' + main_module + '.' + sub_module + '.' + 'model'
+    print("Importing use case module:", use_case_module)
 
-        return getattr(module_file, module_name)
+    module = import_module(use_case_module)
 
-    def run(self):
-        ''' Execute a task
+    return module
 
-        :return: Initialises and runs input class object
-        '''
-        # self.input_module = self.task_input_module(base_path=self.project_base_path,
-        #                                            definition=self.task_input_definition)
-        # self.output_module = self.task_output_module(base_path=self.project_base_path,
-        #                                              definition=self.task_output_definition)
-        # try:
-        #     self.input_module.run_input(output_io=self.output_module)
-        #
-        # except Exception as e:
-        #     raise RuntimeError(e)
 
-        print('running task')
+def run(std_input):
+
+    config_file_path = fetch_std_input(std_input)
+
+    # read out task definition with use cases and in/output paths
+    task_definition, input_path, output_path = read_config(config_file_path)
+
+    # import modules needed for specified use cases
+    module = import_use_case(task_definition)
+
+    return task_definition, input_path, output_path, module

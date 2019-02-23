@@ -1,0 +1,17 @@
+{
+   "task":{
+      "learn":{
+         "classification":{}
+      }
+   },
+   "input":{
+      "storage_type":"local",
+      "path":"/Users/user/testing/ml-app/train_data/classifier/",
+      "name":"training_data_1"
+   },
+   "output":{
+      "storage_type":"local",
+      "path":"/Users/user/testing/ml-app/models/classifier/RF/",
+      "name":"test_model_1"
+   }
+}
