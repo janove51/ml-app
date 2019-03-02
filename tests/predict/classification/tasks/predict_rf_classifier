@@ -1,0 +1,17 @@
+{
+   "task":{
+      "predict":{
+         "classification":{}
+      }
+   },
+   "input":{
+      "storage_type":"local",
+      "path":"/Users/user/testing/ml-app/models/classifier/RF/",
+      "name":"test_model_1.pickle"
+   },
+   "output":{
+      "storage_type":"local",
+      "path":"/Users/user/testing/ml-app/models/classifier/RF/",
+      "name":"test_model_1_output"
+   }
+}
