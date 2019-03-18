@@ -21,9 +21,12 @@ def run(model_file, endpoint, probability = False, debug=True, port=5000):
     # load model
     print('Loading model')
     model_metadata = pickle.load(open(model_file, "rb"))
+    model = model_metadata['model']
+
+    print('Making predictions using model with', model_metadata['accuracy'])
 
     @app.route(endpoint, methods=['POST'])
-    def predict(model_metadata=model_metadata, probability=probability):
+    def predict(model=model, probability=probability):
         '''
         Tasks to execute upon each API call
         :return: 
@@ -37,8 +40,6 @@ def run(model_file, endpoint, probability = False, debug=True, port=5000):
 
             data = pd.read_json(data, orient='records')
 
-            print('Making predictions')
-            model = model_metadata['model']
 
             if probability is False:
                 prediction = model.predict(data)
